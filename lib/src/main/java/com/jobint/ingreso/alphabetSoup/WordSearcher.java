@@ -29,12 +29,19 @@ public class WordSearcher {
 	 * @return {@link Boolean} true si la palabra se encuentra
 	 *         en la sopa de letras.
 	 */
+
+	//Solo busca palabras en los siguientes sentidos
+	//Horizontal hacia adelante y hacia atras
+	//Vertical hacia adelante y hacia atras
+	//Solo puede cambiar de sentido una vez es decir de Vertical a Horizontal y viceversa
+	//No se contemppla caso de cambio de mas de una direccion es decir de Vertical a Horizontal y otra vez a Vertical
+	//Debido aesto ultimo no pasa todos los tests
 	public boolean isPresent(String word) {
 
 		for (int i = 0; i < soup.length; i++) {
 			for (int j = 0; j < soup[i].length; j++) {
 				if (soup[i][j] == word.charAt(0)) {
-					if (i==2 && j==29){
+					if (i==29 && j==0){
 						System.out.println("estoy aca");
 					}
 					boolean encontrado = true; //Si encuentra la primer letra ya pone como true y empieza a recorrer
@@ -46,48 +53,51 @@ public class WordSearcher {
 						for (int h = 1; h < word.length(); h++) {
 							if (word.charAt(h) == soup[i][j + h]) {
 								encontrado = true; //Sigue la busqueda
-							}
-							else {
-								//Comprobamos Vertical hacia abajo
-								int k = (j + h - 1);
-								try {
-									int cont=1;
-									int contk=0;
-									for (int v = h; v < word.length(); v++) {
-										if (word.charAt(v) == soup[i + cont][k - contk]) {
-											encontrado = true;
-										}
-										else {
-											encontrado = false;
-											break;
-										}
-										cont ++;
-										contk ++;
-									}
-								} catch (ArrayIndexOutOfBoundsException ex) {
-									encontrado = false;
-								}
-								//Comprobamos Vertical hacia arriba
-								try {
-									int cont=1;
-									int contk=0;
-									for (int v = h; v < word.length(); v++) {
-										if (word.charAt(v) == soup[i - cont][k - contk]) {
-											encontrado = true;
-										}
-										else {
-											h=word.length();
-											encontrado = false;
-											break;
-										}
-										cont ++;
-										contk ++;
-									}
-								} catch (ArrayIndexOutOfBoundsException ex) {
-									encontrado = false;
+							} else {
+								if (h > 1){
+									//Comprobamos Vertical hacia abajo
+									int k = (j + h - 1);
+									int resg=h;
 									h=word.length();
+								try {
+									int cont = 1;
+									for (int v = resg; v < word.length(); v++) {
+										if (word.charAt(v) == soup[i + cont][k]) {
+											encontrado = true;
+										} else {
+											encontrado = false;
+											break;
+										}
+										cont++;
+									}
+								} catch (ArrayIndexOutOfBoundsException ex) {
+									encontrado = false;
+								}
+								if(!encontrado) {
+									//Comprobamos Vertical hacia arriba
+									try {
+										int cont = 1;
+										for (int v = resg; v < word.length(); v++) {
+											if (word.charAt(v) == soup[i - cont][k]) {
+												encontrado = true;
+											} else {
+												h = word.length();
+												encontrado = false;
+												break;
+											}
+											cont++;
+										}
+									} catch (ArrayIndexOutOfBoundsException ex) {
+										encontrado = false;
+										h = word.length();
+									}
 								}
 							}
+								else{
+									h=word.length();
+									encontrado=false;
+								}
+						}
 						}
 					} catch (ArrayIndexOutOfBoundsException ex) {
 						//la palabra no está en esta dirección de búsqueda
@@ -103,44 +113,48 @@ public class WordSearcher {
 								encontrado = true;
 							}
 							else {
-								//Comprobamos Vertical hacia abajo
-								int k = (j + h - 1);
+								if (h > 1){
+									//Comprobamos Vertical hacia abajo
+									int k = (j + h - 1);
+									int resg=h;
+									h=word.length();
 								try {
-									int cont=1;
-									int contk=0;
-									for (int v = h; v < word.length(); v++) {
-										if (word.charAt(v) == soup[i + cont][k - contk]) {
+									int cont = 1;
+									for (int v = resg; v < word.length(); v++) {
+										if (word.charAt(v) == soup[i + cont][k]) {
 											encontrado = true;
-										}
-										else {
+										} else {
 											encontrado = false;
 											break;
 										}
-										cont ++;
-										contk ++;
+										cont++;
 									}
 								} catch (ArrayIndexOutOfBoundsException ex) {
 									encontrado = false;
 								}
-								//Comprobamos Vertical hacia arriba
-								try {
-									int cont=1;
-									int contk=0;
-									for (int v = h; v < word.length(); v++) {
-										if (word.charAt(v) == soup[i - cont][k - contk]) {
-											encontrado = true;
+								if (!encontrado) {
+									//Comprobamos Vertical hacia arriba
+									try {
+										int cont = 1;
+										for (int v = resg; v < word.length(); v++) {
+											if (word.charAt(v) == soup[i - cont][k]) {
+												encontrado = true;
+											} else {
+												h = word.length();
+												encontrado = false;
+												break;
+											}
+											cont++;
 										}
-										else {
-											h=word.length();
-											encontrado = false;
-											break;
-										}
-										cont ++;
-										contk ++;
+									} catch (ArrayIndexOutOfBoundsException ex) {
+										encontrado = false;
+										h = word.length();
 									}
-								} catch (ArrayIndexOutOfBoundsException ex) {
-									encontrado = false;
+								}
+							}
+								else{
 									h=word.length();
+									encontrado=false;
 								}
 							}
 						}
@@ -157,45 +171,49 @@ public class WordSearcher {
 								encontrado = true;
 							}
 							else {
-								int k = (i + v - 1);
+								if (v > 1){
+									int k = (i + v - 1);
+									int resg=v;
+									v=word.length();
 								//Comprobamos Horizontal hacia adelante
 								try {
-									int cont=1;
-									int contk=0;
-									for (int h = v; h < word.length() ; h++) {
-										if (word.charAt(h) == soup[k - contk][j+cont]) {
+									int cont = 1;
+									for (int h = resg; h < word.length(); h++) {
+										if (word.charAt(h) == soup[k][j + cont]) {
 											encontrado = true;
-										}
-											else {
+										} else {
 											encontrado = false;
 											break;
 										}
-										cont ++;
-										contk ++;
+										cont++;
 									}
-								} catch(ArrayIndexOutOfBoundsException ex) {
+								} catch (ArrayIndexOutOfBoundsException ex) {
 
 									encontrado = false;
 								}
-								//Comprobamos Horizontal hacia atras
-								try {
-									int cont=1;
-									int contk=0;
-									for (int h = v; h < word.length(); h++) {
-										if (word.charAt(h) == soup[k - contk][j - cont]) {
-											encontrado = true;
+								if(!encontrado) {
+									//Comprobamos Horizontal hacia atras
+									try {
+										int cont = 1;
+										for (int h = resg; h < word.length(); h++) {
+											if (word.charAt(h) == soup[k][j - cont]) {
+												encontrado = true;
+											} else {
+												v = word.length();
+												encontrado = false;
+												break;
+											}
+											cont++;
 										}
-										else {
-											v=word.length();
-											encontrado = false;
-											break;
-										}
-										cont ++;
-										contk ++;
+									} catch (ArrayIndexOutOfBoundsException ex) {
+										encontrado = false;
+										v = word.length();
 									}
-								} catch(ArrayIndexOutOfBoundsException ex) {
-									encontrado = false;
+								}
+							}
+								else{
 									v=word.length();
+									encontrado=false;
 								}
 							}
 						}
@@ -211,49 +229,52 @@ public class WordSearcher {
 						for (int v = 1; v < word.length(); v++) {
 							if (word.charAt(v) == soup[i - v][j]) {
 								encontrado = true;
-							}
-							else {
-								int k = (i + v - 1);
+							} else {
+								if (v > 1){
+									int k = (i + v - 1);
+									int resg=v;
+									v=word.length();
 								//Comprobamos Horizontal hacia adelante
 								try {
-									int cont=1;
-									int contk=0;
-									for (int h = v; h < word.length(); h++) {
-										if (word.charAt(h) == soup[k - contk][j + cont]) {
+									int cont = 1;
+									for (int h = resg; h < word.length(); h++) {
+										if (word.charAt(h) == soup[k][j + cont]) {
 											encontrado = true;
-										}
-											else {
+										} else {
 											encontrado = false;
 											break;
 										}
-										cont ++;
-										contk ++;
+										cont++;
 									}
-								} catch(ArrayIndexOutOfBoundsException ex) {
+								} catch (ArrayIndexOutOfBoundsException ex) {
 
 									encontrado = false;
 								}
-								//Comprobamos Horizontal hacia atras
-								try {
-									int cont=1;
-									int contk =0;
-									for (int h = v; h < word.length(); h++) {
-										if (word.charAt(h) == soup[k - contk][j-cont]) {
-											encontrado = true;
+								if(!encontrado) {
+									//Comprobamos Horizontal hacia atras
+									try {
+										int cont = 1;
+										for (int h = resg; h < word.length(); h++) {
+											if (word.charAt(h) == soup[k][j - cont]) {
+												encontrado = true;
+											} else {
+												v = word.length();
+												encontrado = false;
+												break;
+											}
+											cont++;
 										}
-										else {
-											v=word.length();
-											encontrado = false;
-											break;
-										}
-										cont ++;
-										contk ++;
+									} catch (ArrayIndexOutOfBoundsException ex) {
+										encontrado = false;
+										v = word.length();
 									}
-								} catch(ArrayIndexOutOfBoundsException ex) {
-									encontrado = false;
-									v=word.length();
 								}
 							}
+								else{
+									v=word.length();
+									encontrado=false;
+								}
+						}
 						}
 					} catch (ArrayIndexOutOfBoundsException ex) {
 						encontrado = false;
