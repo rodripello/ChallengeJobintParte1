@@ -32,18 +32,15 @@ public class WordSearcher {
 
 	//Solo busca palabras en los siguientes sentidos
 	//Horizontal hacia adelante y hacia atras
-	//Vertical hacia adelante y hacia atras
+	//Vertical hacia arriba y hacia abajo
 	//Solo puede cambiar de sentido una vez es decir de Vertical a Horizontal y viceversa
-	//No se contemppla caso de cambio de mas de una direccion es decir de Vertical a Horizontal y otra vez a Vertical
-	//Debido aesto ultimo no pasa todos los tests
+	//No se contempla caso de cambio de mas de una direccion es decir de Vertical a Horizontal y otra vez a Vertical
+	//Debido a esto ultimo no pasa todos los tests
 	public boolean isPresent(String word) {
 
 		for (int i = 0; i < soup.length; i++) {
 			for (int j = 0; j < soup[i].length; j++) {
 				if (soup[i][j] == word.charAt(0)) {
-					if (i==29 && j==0){
-						System.out.println("estoy aca");
-					}
 					boolean encontrado = true; //Si encuentra la primer letra ya pone como true y empieza a recorrer
 
 					// Se busca en todas las direcciones
